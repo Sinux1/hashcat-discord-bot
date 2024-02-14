@@ -1,0 +1,6 @@
+# Let's ignore the ol' venv stuff. 
+**/.venv
+# Let's ignore the config file for a bit
+config.json
+# I can't stand pycache files.
+**__pycache__
