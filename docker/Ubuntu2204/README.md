@@ -1,5 +1,19 @@
 # Using the Discord Hashcat Bot in a Container
 
+- [Using the Discord Hashcat Bot in a Container](#using-the-discord-hashcat-bot-in-a-container)
+  - [Docker Setup](#docker-setup)
+    - [Docker Install](#docker-install)
+      - [Add Official GPG Key](#add-official-gpg-key)
+      - [Add Repository to Apt Sources](#add-repository-to-apt-sources)
+    - [Docker Rootless](#docker-rootless)
+  - [Install NVIDIA Driver and NVIDIA Container Toolkit](#install-nvidia-driver-and-nvidia-container-toolkit)
+    - [NVIDIA Driver](#nvidia-driver)
+    - [NVIDIA Container Toolkit](#nvidia-container-toolkit)
+    - [Configure NVIDIA Docker Runtime](#configure-nvidia-docker-runtime)
+    - [Drop into the NVIDIA CUDA 12.2.0 Container](#drop-into-the-nvidia-cuda-1220-container)
+      - [Passing ALL GPUs because We Don't Care](#passing-all-gpus-because-we-dont-care)
+      - [Passing Only a Specific GPU into the Container](#passing-only-a-specific-gpu-into-the-container)
+
 You want to run this bot as a containerized work load, eh?  
 There are a couple of things we need to take care of first. If you are a linux noob, this may be a hassle, but I tried to find the most painless way.
 
@@ -46,7 +60,7 @@ Lets stop docker for a second
 
 `sudo systemctl disable --now docker.service docker.socket`
 
-If you installed docker from the instructions [above]() then docker has a rootless setup shell script we can use.  
+If you installed docker from the instructions [above](#add-official-gpg-key) then docker has a rootless setup shell script we can use.  
 Use `--force`, it will complain even though we shut down the service.
 
 `dockerd-rootless-setuptool.sh install --force`
@@ -105,6 +119,13 @@ Now to edit the nvidia container runtime config. Uncomment the line __#no-cgroup
 I promise I will configure cgroups later so that we can run these containers rootless without having to modify `/etc/nvidia-container-runtime/config.toml`
 
 `sudo vim /etc/nvidia-container-runtime/config.toml`
+
+```bash
+#no-cgroups=false
+# becomes
+no-cgroups=true
+```
+
 
 ### Drop into the NVIDIA CUDA 12.2.0 Container
 
